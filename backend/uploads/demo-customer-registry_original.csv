@@ -1,0 +1,11 @@
+customer_id,name,email,state,country,revenue_usd,signup_date
+1001,John Doe,john.doe@gmail.com,CA,US,12000,2024-01-15
+1002,Jane Smith,jane.smith@yahoo.com,cali,United States,1500000,2024-02-20
+1003,alice johnson,alice.j@corp.com,NY,US,45000,2024-03-10
+1004,BOB BROWN,,New York,USA,0,2024-04-05
+1005,Charley Davis,charley.d@outlook.com,tx,USA,78000,2024-05-12
+1006,Eva Martinez,eva.m@gmail.com,Texas,us,32000,2024-06-18
+1007,Frank Wilson,frank@corp.com,N.Y.,USA,95000,2026-12-31
+1007,Frank Wilson,frank@corp.com,N.Y.,USA,95000,2026-12-31
+1009,Grace Lee,grace.l@gmail.com,CA,US,-500,2024-09-02
+1010,Henry Taylor,henry@gmail.com,Calfornia,U.S.A.,110000,
