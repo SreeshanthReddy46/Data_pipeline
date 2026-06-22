@@ -11,7 +11,6 @@ interface ReadinessReportTabProps {
 }
 
 export default function ReadinessReportTab({
-  datasetId,
   score,
   lineage,
   auditLogs,

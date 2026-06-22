@@ -347,7 +347,7 @@ export default function App() {
                 setTableData(null);
                 setCurrentPage("landing");
               }}
-              className="flex items-center gap-2 border border-line hover:border-black hover:bg-soft-card-2 px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors"
+              className="flex items-center gap-2 border border-line hover:border-black hover:bg-soft-card-2 px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors shiny-border-light"
             >
               <Home className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Home</span>
@@ -355,7 +355,7 @@ export default function App() {
 
             <button
               onClick={() => setSettingsOpen(true)}
-              className="flex items-center gap-2 bg-black text-page-bg hover:bg-black/90 px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors"
+              className="flex items-center gap-2 bg-black text-page-bg hover:bg-black/90 px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors shiny-border-dark"
             >
               <Settings className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Settings</span>
@@ -364,113 +364,113 @@ export default function App() {
         </header>
       )}
 
+      {currentPage === "landing" ? (
+        <LandingPage
+          onGetStarted={() => setCurrentPage("app")}
+          onLoadDemo={handleLoadDemo}
+        />
+      ) : (
         <main className="flex-1 max-w-[1728px] w-full mx-auto px-4 sm:px-margin py-8">
-          {currentPage === "landing" ? (
-            <LandingPage
-              onGetStarted={() => setCurrentPage("app")}
-              onLoadDemo={handleLoadDemo}
-            />
-          ) : (
-            <div className="space-y-6">
-              {!selectedDatasetId ? (
-                <Dashboard
-                  datasets={datasets}
-                  onUpload={handleUpload}
-                  onLoadDemo={handleLoadDemo}
-                  onSelectDataset={selectDataset}
-                  loading={loading}
-                />
-              ) : (
-                <div className="space-y-6">
-                  {/* Selected Dataset Details Sub-Header */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-line pb-4">
-                    <div>
-                      <h1 className="text-xl font-extrabold uppercase font-mono tracking-tight text-text">
-                        {datasetDetails?.filename}
-                      </h1>
-                      <div className="flex gap-4 text-xs text-muted font-mono mt-1">
-                        <span>Rows: {datasetDetails?.row_count}</span>
-                        <span>•</span>
-                        <span>Columns: {datasetDetails?.col_count}</span>
-                        <span>•</span>
-                        <span>Readiness: {datasetDetails?.current_score}/100</span>
-                      </div>
-                    </div>
-
-                    {/* View Selector Tabs */}
-                    <div className="flex border border-line rounded-full bg-white-card p-1 shadow-sm overflow-x-auto scrollbar-none max-w-full shrink-0">
-                      <button
-                        onClick={() => setActiveTab("profile")}
-                        className={`px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors flex items-center gap-2 shrink-0 ${activeTab === "profile"
-                          ? "bg-black text-page-bg shadow"
-                          : "text-text hover:bg-soft-card-2"
-                          }`}
-                      >
-                        <BarChart2 className="w-3.5 h-3.5" />
-                        Profile & Stats
-                      </button>
-                      <button
-                        onClick={() => setActiveTab("clean")}
-                        className={`px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors flex items-center gap-2 shrink-0 ${activeTab === "clean"
-                          ? "bg-black text-page-bg shadow"
-                          : "text-text hover:bg-soft-card-2"
-                          }`}
-                      >
-                        <Table className="w-3.5 h-3.5" />
-                        Remediation ({datasetDetails?.issues?.length || 0})
-                      </button>
-                      <button
-                        onClick={() => setActiveTab("score")}
-                        className={`px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors flex items-center gap-2 shrink-0 ${activeTab === "score"
-                          ? "bg-black text-page-bg shadow"
-                          : "text-text hover:bg-soft-card-2"
-                          }`}
-                      >
-                        <CheckSquare className="w-3.5 h-3.5" />
-                        Readiness Report
-                      </button>
+          <div className="space-y-6">
+            {!selectedDatasetId ? (
+              <Dashboard
+                datasets={datasets}
+                onUpload={handleUpload}
+                onLoadDemo={handleLoadDemo}
+                onSelectDataset={selectDataset}
+                loading={loading}
+              />
+            ) : (
+              <div className="space-y-6">
+                {/* Selected Dataset Details Sub-Header */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-line pb-4">
+                  <div>
+                    <h1 className="text-xl font-extrabold uppercase font-mono tracking-tight text-text">
+                      {datasetDetails?.filename}
+                    </h1>
+                    <div className="flex gap-4 text-xs text-muted font-mono mt-1">
+                      <span>Rows: {datasetDetails?.row_count}</span>
+                      <span>•</span>
+                      <span>Columns: {datasetDetails?.col_count}</span>
+                      <span>•</span>
+                      <span>Readiness: {datasetDetails?.current_score}/100</span>
                     </div>
                   </div>
 
-                  {/* Selected Tab content */}
-                  {loading && !datasetDetails ? (
-                    <div className="flex items-center justify-center p-12">
-                      <Loader2 className="w-8 h-8 animate-spin text-black" />
-                    </div>
-                  ) : (
-                    <>
-                      {activeTab === "profile" && datasetDetails && (
-                        <ProfilerTab profile={datasetDetails.profile} />
-                      )}
-
-                      {activeTab === "clean" && datasetDetails && (
-                        <RemediatorTab
-                          datasetId={selectedDatasetId}
-                          issues={datasetDetails.issues}
-                          onRemediate={handleRemediate}
-                          onReset={handleReset}
-                          tableData={tableData}
-                          loading={loading}
-                        />
-                      )}
-
-                      {activeTab === "score" && datasetDetails && (
-                        <ReadinessReportTab
-                          datasetId={selectedDatasetId}
-                          score={datasetDetails.score}
-                          lineage={datasetDetails.lineage}
-                          auditLogs={datasetDetails.audit_logs}
-                          onDownloadCSV={downloadCSV}
-                          onDownloadPDF={downloadPDF}
-                        />
-                      )}
-                    </>
-                  )}
+                  {/* View Selector Tabs */}
+                  <div className="flex border border-line rounded-full bg-white-card p-1 shadow-sm overflow-x-auto scrollbar-none max-w-full shrink-0">
+                    <button
+                      onClick={() => setActiveTab("profile")}
+                      className={`px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors flex items-center gap-2 shrink-0 ${activeTab === "profile"
+                        ? "bg-black text-page-bg shadow"
+                        : "text-text hover:bg-soft-card-2"
+                        }`}
+                    >
+                      <BarChart2 className="w-3.5 h-3.5" />
+                      Profile & Stats
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("clean")}
+                      className={`px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors flex items-center gap-2 shrink-0 ${activeTab === "clean"
+                        ? "bg-black text-page-bg shadow"
+                        : "text-text hover:bg-soft-card-2"
+                        }`}
+                    >
+                      <Table className="w-3.5 h-3.5" />
+                      Remediation ({datasetDetails?.issues?.length || 0})
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("score")}
+                      className={`px-4 py-2 rounded-full text-xs font-label uppercase tracking-wider transition-colors flex items-center gap-2 shrink-0 ${activeTab === "score"
+                        ? "bg-black text-page-bg shadow"
+                        : "text-text hover:bg-soft-card-2"
+                        }`}
+                    >
+                      <CheckSquare className="w-3.5 h-3.5" />
+                      Readiness Report
+                    </button>
+                  </div>
                 </div>
-              )}
-            </div>
-          )}
+
+                {/* Selected Tab content */}
+                {loading && !datasetDetails ? (
+                  <div className="flex items-center justify-center p-12">
+                    <Loader2 className="w-8 h-8 animate-spin text-black" />
+                  </div>
+                ) : (
+                  <>
+                    {activeTab === "profile" && datasetDetails && (
+                      <ProfilerTab profile={datasetDetails.profile} />
+                    )}
+
+                    {activeTab === "clean" && datasetDetails && (
+                      <RemediatorTab
+                        datasetId={selectedDatasetId}
+                        issues={datasetDetails.issues}
+                        onRemediate={handleRemediate}
+                        onReset={handleReset}
+                        tableData={tableData}
+                        loading={loading}
+                      />
+                    )}
+
+                    {activeTab === "score" && datasetDetails && (
+                      <ReadinessReportTab
+                        datasetId={selectedDatasetId}
+                        score={datasetDetails.score}
+                        lineage={datasetDetails.lineage}
+                        auditLogs={datasetDetails.audit_logs}
+                        onDownloadCSV={downloadCSV}
+                        onDownloadPDF={downloadPDF}
+                      />
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </main>
+      )}
 
         {/* Global Footer */}
         <footer className="border-t border-line/20 py-6 text-center text-[10px] uppercase font-bold tracking-widest text-muted">

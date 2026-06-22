@@ -67,3 +67,58 @@
 #collage-section {
   opacity: 1;
 }
+
+/* Premium smooth float keyframe animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Shiny Border Flow Animation */
+@keyframes shiny-border-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.shiny-border-dark {
+  --btn-bg: #181818;
+  border: 1px solid transparent !important;
+  background-image: linear-gradient(var(--btn-bg), var(--btn-bg)), 
+                    linear-gradient(120deg, #181818 0%, #8C8880 25%, #ffffff 50%, #8C8880 75%, #181818 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 250% 250%;
+  animation: shiny-border-flow 4s linear infinite;
+}
+
+.shiny-border-dark:hover {
+  --btn-bg: #222222;
+}
+
+.shiny-border-light {
+  --btn-bg: #FFFDF8;
+  border: 1px solid transparent !important;
+  background-image: linear-gradient(var(--btn-bg), var(--btn-bg)), 
+                    linear-gradient(120deg, #D9D7D0 0%, #8C8880 30%, #1B1B1B 50%, #8C8880 70%, #D9D7D0 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 250% 250%;
+  animation: shiny-border-flow 4s linear infinite;
+}
+
+.shiny-border-light:hover {
+  --btn-bg: #FAF9F5;
+}

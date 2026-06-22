@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Play, RotateCcw, AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { Play, RotateCcw, CheckCircle, Loader2 } from "lucide-react";
 
 interface RemediatorTabProps {
   datasetId: string;
@@ -11,7 +11,6 @@ interface RemediatorTabProps {
 }
 
 export default function RemediatorTab({
-  datasetId,
   issues,
   onRemediate,
   onReset,
@@ -248,8 +247,9 @@ export default function RemediatorTab({
                       return (
                         <td
                           key={col}
+                          title={isNull ? undefined : "Hover to reveal sensitive data"}
                           className={`p-3 border-r border-line/20 truncate max-w-[150px] ${
-                            isNull ? "bg-page-bg/10 text-muted-light italic" : "text-text"
+                            isNull ? "bg-page-bg/10 text-muted-light italic" : "text-text blur-[5px] hover:blur-none select-none transition-all duration-300 cursor-pointer"
                           }`}
                         >
                           {isNull ? "null" : String(val)}

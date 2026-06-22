@@ -178,7 +178,9 @@ export default function ContactSection() {
                         <label htmlFor="name" className="font-label text-xs uppercase tracking-wider text-muted font-bold block">
                           Full Name *
                         </label>
-                        <input
+                        <motion.input
+                          whileFocus={{ scale: 1.01, boxShadow: "0 0 0 2px rgba(24, 24, 24, 0.08)", borderColor: "#181818" }}
+                          transition={{ duration: 0.2 }}
                           type="text"
                           id="name"
                           required
@@ -193,8 +195,10 @@ export default function ContactSection() {
                         <label htmlFor="email" className="font-label text-xs uppercase tracking-wider text-muted font-bold block">
                           Email Address *
                         </label>
-                        <input
-                          type="email"
+                        <motion.input
+                          whileFocus={{ scale: 1.01, boxShadow: "0 0 0 2px rgba(24, 24, 24, 0.08)", borderColor: "#181818" }}
+                          transition={{ duration: 0.2 }}
+                          type="text"
                           id="email"
                           required
                           value={formData.email}
@@ -209,7 +213,9 @@ export default function ContactSection() {
                       <label htmlFor="company" className="font-label text-xs uppercase tracking-wider text-muted font-bold block">
                         Company Name
                       </label>
-                      <input
+                      <motion.input
+                        whileFocus={{ scale: 1.01, boxShadow: "0 0 0 2px rgba(24, 24, 24, 0.08)", borderColor: "#181818" }}
+                        transition={{ duration: 0.2 }}
                         type="text"
                         id="company"
                         value={formData.company}
@@ -223,7 +229,9 @@ export default function ContactSection() {
                       <label htmlFor="message" className="font-label text-xs uppercase tracking-wider text-muted font-bold block">
                         Message *
                       </label>
-                      <textarea
+                      <motion.textarea
+                        whileFocus={{ scale: 1.01, boxShadow: "0 0 0 2px rgba(24, 24, 24, 0.08)", borderColor: "#181818" }}
+                        transition={{ duration: 0.2 }}
                         id="message"
                         required
                         rows={4}
@@ -239,7 +247,7 @@ export default function ContactSection() {
                       whileTap={{ scale: 0.98 }}
                       type="submit"
                       disabled={loading}
-                      className="w-full bg-black text-page-bg py-4 rounded-xl font-label text-xs uppercase tracking-widest font-bold hover:bg-black/95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:bg-zinc-800 disabled:cursor-not-allowed"
+                      className="w-full bg-black text-page-bg py-4 rounded-xl font-label text-xs uppercase tracking-widest font-bold hover:bg-black/95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:bg-zinc-800 disabled:cursor-not-allowed group shiny-border-dark"
                     >
                       {loading ? (
                         <>
@@ -248,7 +256,14 @@ export default function ContactSection() {
                         </>
                       ) : (
                         <>
-                          <Send className="w-4 h-4" />
+                          <motion.div
+                            variants={{
+                              hover: { x: 5, y: -5 }
+                            }}
+                            className="flex items-center group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                          >
+                            <Send className="w-4 h-4" />
+                          </motion.div>
                           Submit Message
                         </>
                       )}

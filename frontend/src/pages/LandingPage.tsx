@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import Aurora from "../components/Aurora";
+import { useState, useEffect, useRef } from "react";
 import ContactSection from "../components/ContactSection";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,8 +12,35 @@ interface LandingPageProps {
 
 export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPageProps) {
   const [activeRole, setActiveRole] = useState<"engineers" | "scientists" | "mlops" | "compliance">("engineers");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const heroPinRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Main Visual mock frame scroll zoom-out and text fade-in timeline with pinning
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: heroPinRef.current,
+        start: "top top",
+        end: "+=500", // Pinned for 500px of scroll
+        pin: true,
+        scrub: 1,
+        anticipatePin: 1
+      }
+    });
+
+    tl.fromTo(".main-mock-frame",
+      { scale: 1.12, y: 0 },
+      { scale: 0.94, y: 20 },
+      0
+    );
+
+    tl.fromTo(".mock-frame-text",
+      { opacity: 0, scale: 0.9 },
+      { opacity: 1, scale: 1 },
+      0.05
+    );
+
     // Only animate on screen sizes where desktop absolute layout is visible
     if (window.innerWidth < 1024) return;
 
@@ -97,21 +123,6 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
       }
     );
 
-    // Card 6: Comment bubble (Initial: shifted up/left. Final: shifted down/right - prolonging)
-    gsap.fromTo(".collage-card-6",
-      { y: -30, x: -10, opacity: 0.9 },
-      {
-        y: 60,
-        x: 20,
-        opacity: 1,
-        scrollTrigger: {
-          trigger: "#collage-section",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1
-        }
-      }
-    );
 
     // Card 7: Bottom-Left (Initial: shifted right/up. Final: shifted left/down - prolonging)
     gsap.fromTo(".collage-card-7",
@@ -176,28 +187,27 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
         }
       }
     );
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
 
 
   return (
-    <div className="text-text font-body-lg min-h-screen antialiased selection:bg-black selection:text-white bg-page-bg relative overflow-x-hidden">
+    <div ref={containerRef} className="text-text font-body-lg min-h-screen antialiased selection:bg-black selection:text-white bg-page-bg relative overflow-x-hidden">
       
-      {/* Dynamic WebGL Aurora backdrop glow */}
+      {/* Soft gradient backdrop glow */}
       <div className="absolute inset-x-0 top-0 h-[1100px] z-0 pointer-events-none opacity-30 overflow-hidden">
-        <Aurora
-          colorStops={["#7cff67", "#B497CF", "#5227FF"]}
-          blend={0.5}
-          amplitude={1.0}
-          speed={0.5}
-        />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-page-bg/40 to-page-bg backdrop-blur-[60px]" />
       </div>
 
 
       <main>
-        {/* 2. Hero Section */}
-        <section className="pt-[120px] lg:pt-[240px] px-4 sm:px-margin max-w-[1728px] mx-auto flex flex-col items-center text-center relative overflow-visible bg-page-bg h-auto min-h-screen py-12 lg:h-[1100px]">
+        {/* Hero Section Wrapper for Pinning */}
+        <div ref={heroPinRef} className="hero-pin-wrapper w-full bg-page-bg relative overflow-visible">
+          {/* 2. Hero Section */}
+          <section className="hero-section pt-[120px] lg:pt-[240px] px-4 sm:px-margin max-w-[1728px] mx-auto flex flex-col items-center text-center relative overflow-visible bg-page-bg h-auto min-h-screen py-12 lg:h-[1100px]">
           <h1 className="font-display text-3xl sm:text-5xl lg:text-display text-balance max-w-4xl mb-lg text-text tracking-tighter">
             Bring every dataset into focus
           </h1>
@@ -206,21 +216,29 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
           </p>
           <button 
             onClick={onGetStarted}
-            className="bg-black text-page-bg font-label text-label px-8 py-4 rounded-full hover:bg-black/90 transition-opacity mb-[40px] lg:mb-[80px]"
+            className="bg-black text-page-bg font-label text-label px-8 py-4 rounded-full hover:bg-black/90 transition-opacity mb-[40px] lg:mb-[80px] shiny-border-dark"
           >
             Get started
           </button>
           
           {/* Main Visual mock frame */}
-          <div className="w-full max-w-[1492px] bg-panel-bg overflow-hidden shadow-2xl relative z-10 rounded-[40px] h-[250px] sm:h-[400px] md:h-[550px] lg:h-[800px] border border-line/20">
+          <div className="main-mock-frame w-full max-w-[1492px] bg-panel-bg overflow-hidden shadow-2xl relative z-10 rounded-[40px] h-[250px] sm:h-[400px] md:h-[550px] lg:h-[800px] border border-line/20">
             <img 
               alt="Vibrant abstract gradient" 
               className="w-full h-full object-cover" 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZfadtPwCaL7GcKGqde5_m46RsgQuGHyvmFJKZWsW5jfFqnNirmZPOdmGitXGSosoyvd2ARpUMWjjL8IEKefG6Ke85eAGiFMBHIfFA02wVwfcf75CnI7Zlw-OjEat9LRRuqHbfAWLeBZeTEUbVQRAoPIjSlWUOZmW8R32Bk0XUblejaVIpv6gSC4cngTCtp7tXSmIz5jJIUVZIPoKSyGDhck_ulpZZnIfCQmxw2h73JqSgD__x2T1wiMf4Q_TQCvHgDTzQ3sY3JjqV" 
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            
+            {/* Cool Overlay Text */}
+            <div className="mock-frame-text absolute inset-0 flex flex-col items-center justify-center bg-black/45 backdrop-blur-[2px] opacity-0 text-white z-20 px-4">
+              <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.25em] text-white/80 mb-2 font-bold">Local Quality Engine</span>
+              <h2 className="font-display text-xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-center max-w-2xl leading-none">Secure Sandboxed Operations</h2>
+              <p className="font-body-md text-[10px] sm:text-xs text-white/70 mt-3 uppercase tracking-wider font-semibold">100% Client-Side Pipeline Execution</p>
+            </div>
           </div>
         </section>
+      </div>
 
         {/* 3. Trust Strip (Ticker) */}
         <section className="py-8 lg:py-xl px-4 sm:px-margin border-t border-line/30 max-w-[1728px] mx-auto flex flex-col items-center bg-page-bg relative z-0 pt-[40px]">
@@ -298,26 +316,13 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
                 />
               </div>
               
-              {/* 5. Center-lower card & AI correction box */}
+              {/* 5. Center-lower card */}
               <div className="rounded-[24px] overflow-hidden bg-panel-bg shadow-lg border border-line/10 h-[210px] relative">
                 <img 
                   className="w-full h-full object-cover" 
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1JNPrOdnXlUzdJF3xsLHezyvtNiP-I2bNeN_ZmsjulJHHaMG8LFiwvg-ClLM09DHJPdktxAX9r8PlmDv2NT_xVXzDoCYQba-d-TPIUmGe_PnNytjbr2Z4jVDeLoGmqiYo2PI1blrti6KE4pK6yB_4qWY7eZNwxowZQz_0BTlcMJHpztmUsLT2F9XkjhbDv25Q8Ag077NWSsE93fCPUqdP7LhQkrTUTIBa6EQb3Eu3idHTuhFW2qbca7jUO2GLP6aa7Pauo0aJi8Ef" 
                   alt="Data mapping visualization"
                 />
-                <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md rounded-xl flex items-center gap-2.5 px-3 py-2 border border-white/50 shadow-md">
-                  <div className="w-6 h-6 rounded-full bg-soft-card overflow-hidden shrink-0">
-                    <img 
-                      className="w-full h-full object-cover" 
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxUZpAK7kBAK1H5Anlz-i_nh19XyaGUt1hLDC6ZASnuBK2vRcwFDP46vx7HodMWCGvWJVA3aKLfp00pDRGNPsH0LVYvOGBSQ1KJIx2wTCxFcEJMNlnv9DHJKT0wyVelxRunXJN3d41Z2MPDK4poxQF_iybQaYL4ebVjC52RWnq9U6Y-VA7k5seZ7Z4c1n3nq7ply6CwSNm8-OH_B6wae1-h-Zmn2y3jh9urDyal2zhahuy408MHHCcPTmA9TNKUOA7WEsjuEy1iMvC" 
-                      alt="AI bot avatar"
-                    />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span className="font-label text-[8px] text-text font-bold leading-none">db_admin</span>
-                    <span className="font-body-md text-[11px] text-muted leading-tight mt-0.5">zero anomalies! 1h</span>
-                  </div>
-                </div>
               </div>
               
               {/* 7. Bottom-left card */}
@@ -400,20 +405,7 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
               />
             </div>
             
-            {/* 6. Floating Comment (AI correction box) */}
-            <div className="collage-card collage-card-6 absolute bg-white/80 backdrop-blur-lg rounded-full flex items-center gap-3 px-4 py-3 shadow-lg border border-white/50 z-20" style={{ left: "35%", top: "78%", width: "305px", height: "62px" }}>
-              <div className="w-8 h-8 rounded-full bg-soft-card overflow-hidden">
-                <img 
-                  className="w-full h-full object-cover" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxUZpAK7kBAK1H5Anlz-i_nh19XyaGUt1hLDC6ZASnuBK2vRcwFDP46vx7HodMWCGvWJVA3aKLfp00pDRGNPsH0LVYvOGBSQ1KJIx2wTCxFcEJMNlnv9DHJKT0wyVelxRunXJN3d41Z2MPDK4poxQF_iybQaYL4ebVjC52RWnq9U6Y-VA7k5seZ7Z4c1n3nq7ply6CwSNm8-OH_B6wae1-h-Zmn2y3jh9urDyal2zhahuy408MHHCcPTmA9TNKUOA7WEsjuEy1iMvC" 
-                  alt="AI bot avatar"
-                />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="font-label text-[10px] text-text font-bold">db_admin</span>
-                <span className="font-body-md text-[13px] text-muted leading-tight">zero anomalies detected! 1h</span>
-              </div>
-            </div>
+
             
             {/* 7. Bottom-left card */}
             <div className="collage-card collage-card-7 absolute rounded-[24px] overflow-hidden bg-panel-bg shadow-xl border border-line/10" style={{ left: "4%", top: "75%", width: "340px", height: "250px" }}>
@@ -456,7 +448,7 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
             </svg>
           </div>
           <h2 className="font-display text-[49px] leading-[1.1] text-balance max-w-[1200px] font-bold tracking-tight text-text relative z-10">
-            As AI agents expand across the enterprise, the need for clean, reliable data has never been more critical. DATA.READY unifies your dataset quality.
+            As data operations expand across the enterprise, the need for clean, reliable data has never been more critical. DATA.READY unifies your dataset quality.
           </h2>
         </section>
 
@@ -540,7 +532,7 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
               </p>
               <button 
                 onClick={onGetStarted}
-                className="bg-black text-page-bg font-label text-sm px-6 py-3 rounded-full w-fit hover:bg-black/90 transition-opacity shadow"
+                className="bg-black text-page-bg font-label text-sm px-6 py-3 rounded-full w-fit hover:bg-black/90 transition-opacity shadow shiny-border-dark"
               >
                 Launch workspace
               </button>
@@ -773,7 +765,7 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
           </h2>
           <button 
             onClick={onLoadDemo}
-            className="bg-black text-page-bg font-label text-sm px-10 py-5 rounded-full hover:bg-black/80 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-1 transform duration-300"
+            className="bg-black text-page-bg font-label text-sm px-10 py-5 rounded-full hover:bg-black/80 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-1 transform duration-300 shiny-border-dark"
           >
             Launch Demo Pipeline
           </button>
@@ -812,7 +804,7 @@ export default function LandingPage({ onGetStarted, onLoadDemo }: LandingPagePro
             
             <button 
               onClick={onGetStarted}
-              className="bg-white text-black font-label text-label h-full px-8 rounded-full hover:bg-gray-100 transition-colors duration-300 scale-95 hover:scale-100 shrink-0 flex items-center shadow-sm"
+              className="bg-white text-black font-label text-label h-full px-8 rounded-full hover:bg-gray-100 transition-colors duration-300 scale-95 hover:scale-100 shrink-0 flex items-center shadow-sm shiny-border-light"
             >
               Get started
             </button>

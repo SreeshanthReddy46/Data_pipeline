@@ -115,7 +115,7 @@ export default function Dashboard({
           <button
             onClick={onLoadDemo}
             disabled={loading}
-            className="w-full bg-black hover:bg-black/90 text-page-bg p-3.5 rounded-full text-xs font-label uppercase tracking-wider transition-colors flex items-center justify-center gap-2 mt-6 disabled:opacity-50 shadow"
+            className="w-full bg-black hover:bg-black/90 text-page-bg p-3.5 rounded-full text-xs font-label uppercase tracking-wider transition-colors flex items-center justify-center gap-2 mt-6 disabled:opacity-50 shadow shiny-border-dark"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
